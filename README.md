@@ -1,36 +1,131 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SEV Property Management System - Frontend Mockup
+
+A modern property management system mockup built with Next.js and shadcn/ui components.
+
+## Features
+
+### 🏠 Dashboard
+- Real-time payment status overview
+- Key metrics (properties, tenants, collection rate)
+- Recent transactions with automatic payment matching
+- Upcoming move-ins/move-outs
+
+### 🏢 Property Management (Objektverwaltung)
+- Master-detail view of all properties
+- Detailed property information including:
+  - Unit management
+  - Financial overview
+  - Property specifications
+  - Tenant occupancy status
+
+### 👥 Tenant Management (Mieterverwaltung)
+- Complete tenant database
+- Contact information management
+- Contract history
+- Payment status tracking
+- Move-in/out dates
+
+### 📄 Contract Management (Vertragsverwaltung)
+- Active contract overview
+- Rent increase scheduling
+- Contract expiration tracking
+- Payment terms management
+
+### 💰 Payment Tracking (Zahlungsverfolgung)
+- Bank account integration mockup
+- Automatic payment matching
+- Payment status dashboard
+- Overdue payment alerts
+- Bank transaction import simulation
+
+### 📁 Document Management (Dokumentenverwaltung)
+- Centralized document storage
+- Category-based organization
+- Document sharing with tenants
+- Search and filter capabilities
+- Archive functionality
+
+### ⚙️ Settings (Einstellungen)
+- Company information
+- Banking configuration
+- Notification preferences
+- User management
+- System settings
+
+## Tech Stack
+
+- **Framework:** Next.js 15.3.5 (App Router)
+- **UI Components:** shadcn/ui
+- **Styling:** Tailwind CSS v4
+- **Language:** TypeScript
+- **Icons:** Lucide React
 
 ## Getting Started
 
-First, run the development server:
+First, install dependencies:
+
+```bash
+npm install
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the mockup.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+app/
+├── page.tsx              # Dashboard
+├── properties/           # Property management
+├── tenants/             # Tenant management
+├── contracts/           # Contract management
+├── payments/            # Payment tracking
+├── documents/           # Document management
+└── settings/            # System settings
 
-## Learn More
+components/
+├── layout/
+│   └── app-sidebar.tsx  # Main navigation sidebar
+└── ui/                  # shadcn/ui components
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Mock Data
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The application uses mock data to demonstrate functionality:
+- 4 properties with various unit configurations
+- Multiple tenants with different payment statuses
+- Bank transactions with automatic matching
+- Sample documents across different categories
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Key Features Demonstrated
 
-## Deploy on Vercel
+1. **Automatic Payment Matching**: Shows how bank transactions are automatically matched to tenant contracts
+2. **Payment Status Visualization**: Color-coded status indicators (green = paid, yellow = partial, red = overdue)
+3. **Document Sharing**: Mockup of sharing documents with specific tenants
+4. **Multi-language Support**: German interface for the German market
+5. **Responsive Design**: Works on desktop and tablet devices
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Future Enhancements
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Real bank API integration
+- Email notification system
+- Advanced reporting features
+- Mobile app version
+- Tenant portal
+- Automated invoice generation
+- Integration with accounting software
+
+## Development Notes
+
+This is a frontend mockup demonstrating the user interface and workflow. Backend integration would require:
+- REST API or GraphQL backend
+- Database design (PostgreSQL recommended)
+- Authentication system
+- File storage solution (S3 or similar)
+- Payment gateway integration
+- Email service integration
