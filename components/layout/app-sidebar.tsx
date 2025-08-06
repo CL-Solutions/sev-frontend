@@ -13,6 +13,13 @@ import {
   ChevronUp,
   User2,
   Home,
+  UserPlus,
+  AlertTriangle,
+  Hammer,
+  Receipt,
+  FileBarChart,
+  Briefcase,
+  Shield,
 } from "lucide-react"
 
 import {
@@ -50,9 +57,24 @@ const items = [
     icon: Home,
   },
   {
+    title: "WEG Verwalter",
+    url: "/weg-administrators",
+    icon: Briefcase,
+  },
+  {
+    title: "Handwerker",
+    url: "/contractors",
+    icon: Hammer,
+  },
+  {
     title: "Mieter",
     url: "/tenants",
     icon: Users,
+  },
+  {
+    title: "Mieterwechsel",
+    url: "/tenant-changes",
+    icon: UserPlus,
   },
   {
     title: "Verträge",
@@ -65,9 +87,29 @@ const items = [
     icon: CreditCard,
   },
   {
+    title: "SEPA-Mandate",
+    url: "/sepa-mandates",
+    icon: Shield,
+  },
+  {
+    title: "Rechnungszuordnung",
+    url: "/invoice-matching",
+    icon: Receipt,
+  },
+  {
+    title: "Mahnwesen",
+    url: "/dunning",
+    icon: AlertTriangle,
+  },
+  {
     title: "Dokumente",
     url: "/documents",
     icon: FolderOpen,
+  },
+  {
+    title: "Reports",
+    url: "/reports",
+    icon: FileBarChart,
   },
   {
     title: "Einstellungen",

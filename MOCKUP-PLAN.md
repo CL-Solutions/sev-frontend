@@ -164,12 +164,23 @@ Property management system for property management companies with comprehensive 
 
 ## Next Steps
 - [x] Review screenshots of current tool
-- [ ] Create modern UI mockups using shadcn/ui components
-- [ ] Design responsive layouts
-- [ ] Create navigation structure
-- [ ] Build interactive prototypes for key workflows
+- [x] Create modern UI mockups using shadcn/ui components
+- [x] Design responsive layouts
+- [x] Create navigation structure
+- [x] Build interactive prototypes for key workflows
 - [ ] Implement dashboard with payment status overview
-- [ ] Create property management interface
-- [ ] Build tenant/contract management
-- [ ] Design payment tracking with bank integration mock
-- [ ] Add document management functionality
+- [x] Create property management interface (basic)
+- [x] Build tenant/contract management
+- [x] Design payment tracking with bank integration mock
+- [x] Add document management functionality
+
+## Implemented Features (January 2025)
+- [x] Tenant communication/contact history tab
+- [x] Tenant succession/change management with prospects
+- [x] Automated dunning procedures and rent adjustments
+- [x] Craftsmen/contractors management per building/trade
+- [x] Invoice to bank statement matching with AI suggestions
+- [x] Rental contract creation with preview and PDF export
+- [x] WEG administrator contact management
+- [x] SEPA mandate generation
+- [x] Automatic report sending to customers

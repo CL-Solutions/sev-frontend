@@ -44,6 +44,10 @@ import {
   Eye,
   Share2,
   File,
+  MessageSquare,
+  Send,
+  Paperclip,
+  AlertCircle,
 } from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -171,6 +175,32 @@ const propertyMapping = {
   "SEV Theaterstr. 1": "662",
   "SEV Rathausstr. 12": "663",
   "SEV Bahnhofstr. 5": "664",
+}
+
+// Mock communication history for tenants
+const tenantCommunications = {
+  "1": [ // Ochs, David
+    { id: "COMM001", type: "email", subject: "Willkommen in Ihrer neuen Wohnung", date: "15.04.2025", time: "10:30", direction: "outgoing", status: "sent", attachments: 1 },
+    { id: "COMM002", type: "email", subject: "Re: Frage zur Heizungsanlage", date: "20.04.2025", time: "14:15", direction: "incoming", status: "read" },
+    { id: "COMM003", type: "phone", subject: "Anruf: Terminvereinbarung Übergabe", date: "14.04.2025", time: "11:00", direction: "outgoing", duration: "5 Min" },
+    { id: "COMM004", type: "letter", subject: "Mietvertrag unterschrieben", date: "10.04.2025", time: "09:00", direction: "incoming", status: "processed", attachments: 1 },
+  ],
+  "2": [ // Müller, Anna
+    { id: "COMM005", type: "email", subject: "Nebenkostenabrechnung 2023", date: "15.01.2024", time: "09:00", direction: "outgoing", status: "sent", attachments: 2 },
+    { id: "COMM006", type: "email", subject: "Mieterhöhung ab 01.01.2024", date: "01.11.2023", time: "10:00", direction: "outgoing", status: "sent" },
+    { id: "COMM007", type: "phone", subject: "Anruf: Reparatur Wasserhahn", date: "10.01.2025", time: "16:30", direction: "incoming", duration: "8 Min" },
+  ],
+  "3": [ // Schmidt, Peter
+    { id: "COMM008", type: "email", subject: "1. Mahnung - Dezember 2024", date: "15.12.2024", time: "09:00", direction: "outgoing", status: "sent" },
+    { id: "COMM009", type: "email", subject: "Re: Zahlungserinnerung", date: "18.12.2024", time: "14:20", direction: "incoming", status: "read" },
+    { id: "COMM010", type: "letter", subject: "Zahlungserinnerung November", date: "15.11.2024", time: "09:00", direction: "outgoing", status: "sent" },
+  ],
+  "4": [ // Wagner, Maria  
+    { id: "COMM011", type: "email", subject: "1. Mahnung - Januar 2025", date: "10.01.2025", time: "09:00", direction: "outgoing", status: "sent" },
+    { id: "COMM012", type: "email", subject: "2. Mahnung - Januar 2025", date: "20.01.2025", time: "09:00", direction: "outgoing", status: "sent" },
+    { id: "COMM013", type: "phone", subject: "Anruf: Zahlungsverzug besprochen", date: "22.01.2025", time: "10:15", direction: "outgoing", duration: "12 Min" },
+    { id: "COMM014", type: "letter", subject: "Letzte Mahnung vor rechtlichen Schritten", date: "25.01.2025", time: "09:00", direction: "outgoing", status: "sent", important: true },
+  ],
 }
 
 // Mock documents for tenants
@@ -408,6 +438,7 @@ function TenantsPageContent() {
                 <TabsTrigger value="payments">Zahlungen</TabsTrigger>
                 <TabsTrigger value="documents">Dokumente</TabsTrigger>
                 <TabsTrigger value="contact">Kontakt</TabsTrigger>
+                <TabsTrigger value="communication">Kommunikation</TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" className="space-y-4">
@@ -716,6 +747,127 @@ function TenantsPageContent() {
                     </dl>
                   </CardContent>
                 </Card>
+              </TabsContent>
+
+              <TabsContent value="communication" className="space-y-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">Kommunikationsverlauf</h3>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline">
+                      <FileText className="mr-1 h-4 w-4" />
+                      Brief erstellen
+                    </Button>
+                    <Button size="sm" onClick={() => setEmailDialogOpen(true)}>
+                      <Mail className="mr-1 h-4 w-4" />
+                      E-Mail senden
+                    </Button>
+                  </div>
+                </div>
+
+                {tenantCommunications[selectedTenantData.id as keyof typeof tenantCommunications] && tenantCommunications[selectedTenantData.id as keyof typeof tenantCommunications].length > 0 ? (
+                  <Card>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-[50px]">Typ</TableHead>
+                          <TableHead>Betreff</TableHead>
+                          <TableHead>Datum</TableHead>
+                          <TableHead>Zeit</TableHead>
+                          <TableHead>Richtung</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Aktionen</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {tenantCommunications[selectedTenantData.id as keyof typeof tenantCommunications].map((comm) => (
+                          <TableRow key={comm.id} className={'important' in comm && comm.important ? "bg-red-50" : ""}>
+                            <TableCell>
+                              {comm.type === "email" ? (
+                                <Mail className="h-4 w-4 text-muted-foreground" />
+                              ) : comm.type === "phone" ? (
+                                <Phone className="h-4 w-4 text-muted-foreground" />
+                              ) : (
+                                <FileText className="h-4 w-4 text-muted-foreground" />
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <span className={`font-medium ${'important' in comm && comm.important ? "text-red-600" : ""}`}>
+                                  {comm.subject}
+                                </span>
+                                {'important' in comm && comm.important && <AlertCircle className="h-4 w-4 text-red-600" />}
+                                {'attachments' in comm && comm.attachments && (
+                                  <Badge variant="outline" className="text-xs">
+                                    <Paperclip className="h-3 w-3 mr-1" />
+                                    {comm.attachments}
+                                  </Badge>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>{comm.date}</TableCell>
+                            <TableCell>
+                              {comm.time}
+                              {'duration' in comm && comm.duration && (
+                                <span className="text-xs text-muted-foreground ml-1">
+                                  ({comm.duration as string})
+                                </span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant={comm.direction === "outgoing" ? "outline" : "secondary"}>
+                                {comm.direction === "outgoing" ? (
+                                  <>
+                                    <Send className="h-3 w-3 mr-1" />
+                                    Ausgang
+                                  </>
+                                ) : (
+                                  <>
+                                    <MessageSquare className="h-3 w-3 mr-1" />
+                                    Eingang
+                                  </>
+                                )}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              {comm.status === "sent" && <Badge variant="outline">Gesendet</Badge>}
+                              {comm.status === "read" && <Badge variant="default">Gelesen</Badge>}
+                              {comm.status === "processed" && <Badge variant="default">Bearbeitet</Badge>}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-1">
+                                <Button variant="ghost" size="sm">
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                {comm.type === "email" && (
+                                  <Button variant="ghost" size="sm">
+                                    <Mail className="h-4 w-4" />
+                                  </Button>
+                                )}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </Card>
+                ) : (
+                  <Card>
+                    <CardContent className="flex flex-col items-center justify-center py-12">
+                      <MessageSquare className="h-12 w-12 text-muted-foreground mb-4" />
+                      <p className="text-sm text-muted-foreground">Keine Kommunikation vorhanden</p>
+                      <div className="flex gap-2 mt-4">
+                        <Button size="sm" variant="outline">
+                          <FileText className="mr-2 h-4 w-4" />
+                          Brief erstellen
+                        </Button>
+                        <Button size="sm" onClick={() => setEmailDialogOpen(true)}>
+                          <Mail className="mr-2 h-4 w-4" />
+                          E-Mail senden
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </TabsContent>
             </Tabs>
 

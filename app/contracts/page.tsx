@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Table,
   TableBody,
@@ -22,7 +23,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   FileText,
   Search,
@@ -34,6 +44,12 @@ import {
   TrendingUp,
   Home,
   Users,
+  Plus,
+  Calendar,
+  Euro,
+  Printer,
+  Save,
+  User,
 } from "lucide-react"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 
@@ -191,6 +207,26 @@ function ContractsPageContent() {
   const [ownerSearchQuery, setOwnerSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [typeFilter, setTypeFilter] = useState("all")
+  const [contractCreateOpen, setContractCreateOpen] = useState(false)
+  const [contractPreviewOpen, setContractPreviewOpen] = useState(false)
+  const [newContract, setNewContract] = useState({
+    tenant: "",
+    property: "",
+    unit: "",
+    startDate: "",
+    endDate: "",
+    rentType: "unbefristet",
+    coldRent: "",
+    additionalCosts: "",
+    parkingRent: "",
+    deposit: "",
+    indexRent: false,
+    stepRent: false,
+    sepaMandate: false,
+    includeHeating: true,
+    includeWater: true,
+    includeElectricity: false,
+  })
 
   // Handle URL parameters
   useEffect(() => {
@@ -514,6 +550,11 @@ function ContractsPageContent() {
               <SelectItem value="Gewerbemietvertrag">Gewerbemietvertrag</SelectItem>
             </SelectContent>
           </Select>
+          
+          <Button onClick={() => setContractCreateOpen(true)}>
+            <Plus className="mr-2 h-4 w-4" />
+            Neuer Mietvertrag
+          </Button>
         </div>
 
             {/* Tenant Contracts Table */}
@@ -871,6 +912,414 @@ function ContractsPageContent() {
           </Card>
         </TabsContent>
       </Tabs>
+      
+      {/* Contract Creation Dialog */}
+      <Dialog open={contractCreateOpen} onOpenChange={setContractCreateOpen}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Neuen Mietvertrag erstellen</DialogTitle>
+            <DialogDescription>
+              Erfassen Sie die Details für den neuen Mietvertrag
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-6 py-4">
+            {/* Mieter und Objekt */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold flex items-center gap-2">
+                <User className="h-4 w-4" />
+                Mieter und Objekt
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="tenant">Mieter</Label>
+                  <Select value={newContract.tenant} onValueChange={(value) => setNewContract({...newContract, tenant: value})}>
+                    <SelectTrigger id="tenant">
+                      <SelectValue placeholder="Mieter wählen" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="new">+ Neuer Mieter</SelectItem>
+                      <SelectItem value="Bauer, Thomas">Bauer, Thomas</SelectItem>
+                      <SelectItem value="Klein, Sarah">Klein, Sarah</SelectItem>
+                      <SelectItem value="Wagner, Michael">Wagner, Michael</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="property">Objekt</Label>
+                  <Select value={newContract.property} onValueChange={(value) => setNewContract({...newContract, property: value})}>
+                    <SelectTrigger id="property">
+                      <SelectValue placeholder="Objekt wählen" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="SEV Linkstr. 27">SEV Linkstr. 27</SelectItem>
+                      <SelectItem value="SEV Arbestr. 1">SEV Arbestr. 1</SelectItem>
+                      <SelectItem value="SEV Theaterstr. 1">SEV Theaterstr. 1</SelectItem>
+                      <SelectItem value="SEV Rathausstr. 12">SEV Rathausstr. 12</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="unit">Einheit</Label>
+                  <Input 
+                    id="unit" 
+                    placeholder="z.B. 3"
+                    value={newContract.unit}
+                    onChange={(e) => setNewContract({...newContract, unit: e.target.value})}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Vertragslaufzeit */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Vertragslaufzeit
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="startDate">Vertragsbeginn</Label>
+                  <Input 
+                    id="startDate" 
+                    type="date"
+                    value={newContract.startDate}
+                    onChange={(e) => setNewContract({...newContract, startDate: e.target.value})}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="rentType">Vertragsart</Label>
+                  <Select value={newContract.rentType} onValueChange={(value) => setNewContract({...newContract, rentType: value})}>
+                    <SelectTrigger id="rentType">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="unbefristet">Unbefristet</SelectItem>
+                      <SelectItem value="befristet">Befristet</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {newContract.rentType === "befristet" && (
+                  <div className="space-y-2">
+                    <Label htmlFor="endDate">Vertragsende</Label>
+                    <Input 
+                      id="endDate" 
+                      type="date"
+                      value={newContract.endDate}
+                      onChange={(e) => setNewContract({...newContract, endDate: e.target.value})}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Miete und Kosten */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold flex items-center gap-2">
+                <Euro className="h-4 w-4" />
+                Miete und Kosten
+              </h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="coldRent">Kaltmiete (€)</Label>
+                  <Input 
+                    id="coldRent" 
+                    type="number"
+                    placeholder="z.B. 650"
+                    value={newContract.coldRent}
+                    onChange={(e) => setNewContract({...newContract, coldRent: e.target.value})}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="additionalCosts">Nebenkosten (€)</Label>
+                  <Input 
+                    id="additionalCosts" 
+                    type="number"
+                    placeholder="z.B. 150"
+                    value={newContract.additionalCosts}
+                    onChange={(e) => setNewContract({...newContract, additionalCosts: e.target.value})}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="parkingRent">Stellplatz/Garage (€)</Label>
+                  <Input 
+                    id="parkingRent" 
+                    type="number"
+                    placeholder="z.B. 50"
+                    value={newContract.parkingRent}
+                    onChange={(e) => setNewContract({...newContract, parkingRent: e.target.value})}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="deposit">Kaution (€)</Label>
+                  <Input 
+                    id="deposit" 
+                    type="number"
+                    placeholder="z.B. 1950"
+                    value={newContract.deposit}
+                    onChange={(e) => setNewContract({...newContract, deposit: e.target.value})}
+                  />
+                </div>
+              </div>
+              
+              {/* Total calculation */}
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium">Gesamtmiete (warm)</span>
+                  <span className="text-lg font-bold">
+                    {(parseFloat(newContract.coldRent || "0") + 
+                      parseFloat(newContract.additionalCosts || "0") + 
+                      parseFloat(newContract.parkingRent || "0")).toFixed(2)} €
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Nebenkosten Details */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">In Nebenkosten enthalten</h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="heating" 
+                    checked={newContract.includeHeating}
+                    onCheckedChange={(checked) => setNewContract({...newContract, includeHeating: checked as boolean})}
+                  />
+                  <Label htmlFor="heating" className="text-sm font-normal cursor-pointer">
+                    Heizung
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="water" 
+                    checked={newContract.includeWater}
+                    onCheckedChange={(checked) => setNewContract({...newContract, includeWater: checked as boolean})}
+                  />
+                  <Label htmlFor="water" className="text-sm font-normal cursor-pointer">
+                    Wasser/Abwasser
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="electricity" 
+                    checked={newContract.includeElectricity}
+                    onCheckedChange={(checked) => setNewContract({...newContract, includeElectricity: checked as boolean})}
+                  />
+                  <Label htmlFor="electricity" className="text-sm font-normal cursor-pointer">
+                    Strom
+                  </Label>
+                </div>
+              </div>
+            </div>
+
+            {/* Zusätzliche Optionen */}
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold">Zusätzliche Vereinbarungen</h3>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="indexRent" 
+                    checked={newContract.indexRent}
+                    onCheckedChange={(checked) => setNewContract({...newContract, indexRent: checked as boolean})}
+                  />
+                  <Label htmlFor="indexRent" className="text-sm font-normal cursor-pointer">
+                    Indexmiete (Anpassung nach Verbraucherpreisindex)
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="stepRent" 
+                    checked={newContract.stepRent}
+                    onCheckedChange={(checked) => setNewContract({...newContract, stepRent: checked as boolean})}
+                  />
+                  <Label htmlFor="stepRent" className="text-sm font-normal cursor-pointer">
+                    Staffelmiete (festgelegte Mieterhöhungen)
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="sepaMandate" 
+                    checked={newContract.sepaMandate}
+                    onCheckedChange={(checked) => setNewContract({...newContract, sepaMandate: checked as boolean})}
+                  />
+                  <Label htmlFor="sepaMandate" className="text-sm font-normal cursor-pointer">
+                    SEPA-Lastschriftmandat erteilen
+                  </Label>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setContractCreateOpen(false)}>
+              Abbrechen
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setContractCreateOpen(false)
+                setContractPreviewOpen(true)
+              }}
+            >
+              <FileText className="mr-2 h-4 w-4" />
+              Vorschau
+            </Button>
+            <Button>
+              <Save className="mr-2 h-4 w-4" />
+              Vertrag erstellen
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Contract Preview Dialog */}
+      <Dialog open={contractPreviewOpen} onOpenChange={setContractPreviewOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Vertragsvorschau</DialogTitle>
+            <DialogDescription>
+              Vorschau des Mietvertrags
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="border rounded-lg p-8 bg-white overflow-y-auto max-h-[60vh]">
+            <div className="space-y-6">
+              <div className="text-center mb-8">
+                <h1 className="text-2xl font-bold">MIETVERTRAG</h1>
+                <p className="text-sm text-gray-600 mt-2">für Wohnraum</p>
+              </div>
+              
+              <div className="space-y-4">
+                <h2 className="font-bold">Zwischen</h2>
+                <div className="pl-4">
+                  <p>SEV Property Management GmbH</p>
+                  <p>Musterstraße 1</p>
+                  <p>80331 München</p>
+                  <p className="italic">(nachfolgend &quot;Vermieter&quot; genannt)</p>
+                </div>
+                
+                <p className="font-bold">und</p>
+                
+                <div className="pl-4">
+                  <p>{newContract.tenant || "[Mietername]"}</p>
+                  <p>[Adresse des Mieters]</p>
+                  <p className="italic">(nachfolgend &quot;Mieter&quot; genannt)</p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h2 className="font-bold">§ 1 Mietgegenstand</h2>
+                <p>
+                  Der Vermieter vermietet an den Mieter die Wohnung im Objekt <strong>{newContract.property || "[Objekt]"}</strong>,
+                  Einheit <strong>{newContract.unit || "[Einheit]"}</strong>, bestehend aus [Anzahl] Zimmern, Küche, Bad und Flur
+                  mit einer Wohnfläche von ca. [XX] m².
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <h2 className="font-bold">§ 2 Mietzeit</h2>
+                <p>
+                  Das Mietverhältnis beginnt am <strong>{newContract.startDate || "[Datum]"}</strong> und läuft
+                  {newContract.rentType === "befristet" 
+                    ? ` bis zum ${newContract.endDate || "[Datum]"} (befristet).`
+                    : " auf unbestimmte Zeit."
+                  }
+                </p>
+              </div>
+              
+              <div className="space-y-4">
+                <h2 className="font-bold">§ 3 Miete</h2>
+                <p>Die monatliche Miete beträgt:</p>
+                <div className="pl-4 space-y-1">
+                  <p>Kaltmiete: <strong>{newContract.coldRent || "0"} €</strong></p>
+                  <p>Nebenkosten-Vorauszahlung: <strong>{newContract.additionalCosts || "0"} €</strong></p>
+                  {newContract.parkingRent && parseFloat(newContract.parkingRent) > 0 && (
+                    <p>Stellplatz/Garage: <strong>{newContract.parkingRent} €</strong></p>
+                  )}
+                  <p className="border-t pt-1 font-bold">
+                    Gesamtmiete (warm): {(parseFloat(newContract.coldRent || "0") + 
+                      parseFloat(newContract.additionalCosts || "0") + 
+                      parseFloat(newContract.parkingRent || "0")).toFixed(2)} €
+                  </p>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h2 className="font-bold">§ 4 Kaution</h2>
+                <p>
+                  Der Mieter leistet eine Kaution in Höhe von <strong>{newContract.deposit || "0"} €</strong>
+                  (entspricht {newContract.deposit && newContract.coldRent 
+                    ? (parseFloat(newContract.deposit) / parseFloat(newContract.coldRent)).toFixed(1) 
+                    : "X"} Monatsmieten).
+                </p>
+              </div>
+              
+              {(newContract.indexRent || newContract.stepRent) && (
+                <div className="space-y-4">
+                  <h2 className="font-bold">§ 5 Mietanpassung</h2>
+                  {newContract.indexRent && (
+                    <p>Die Miete wird jährlich entsprechend der Entwicklung des Verbraucherpreisindex angepasst.</p>
+                  )}
+                  {newContract.stepRent && (
+                    <p>Die Miete erhöht sich gemäß folgender Staffelung: [Staffelvereinbarung einfügen]</p>
+                  )}
+                </div>
+              )}
+              
+              <div className="mt-12 space-y-8">
+                <div className="grid grid-cols-2 gap-8">
+                  <div>
+                    <p className="mb-8">_______________________________</p>
+                    <p>Ort, Datum</p>
+                  </div>
+                  <div>
+                    <p className="mb-8">_______________________________</p>
+                    <p>Ort, Datum</p>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-8">
+                  <div>
+                    <p className="mb-8">_______________________________</p>
+                    <p>Vermieter</p>
+                  </div>
+                  <div>
+                    <p className="mb-8">_______________________________</p>
+                    <p>Mieter</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setContractPreviewOpen(false)
+                setContractCreateOpen(true)
+              }}
+            >
+              Zurück zur Bearbeitung
+            </Button>
+            <Button variant="outline">
+              <Download className="mr-2 h-4 w-4" />
+              Als PDF speichern
+            </Button>
+            <Button>
+              <Printer className="mr-2 h-4 w-4" />
+              Drucken
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
     </div>
   )
